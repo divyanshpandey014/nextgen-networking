@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: nextgen-networking
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn nextgen_networking.wsgi:application"
