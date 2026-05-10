@@ -1,0 +1,31 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}Contact us{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:800px;margin:28px auto;padding:0 16px;">
+  <div class="card" style="padding:18px;">
+    <h2 style="margin:0 0 8px 0;color:#eaf3ff;">Contact ConnectGen</h2>
+    <p style="color:var(--muted);margin-bottom:12px;">
+      Have a question or need help? Send us a message and admin will contact you.
+    </p>
+
+    <form method="post" style="display:flex;flex-direction:column;gap:10px;">
+      {% csrf_token %}
+      <label class="small">Your name (optional)</label>
+      <input type="text" name="name" value="{{ name|default:'' }}">
+
+      <label class="small">Your email (optional)</label>
+      <input type="email" name="email" value="{{ email|default:'' }}">
+
+      <label class="small">Message</label>
+      <textarea name="message" rows="6" placeholder="Write your message here...">{{ message|default:'' }}</textarea>
+
+      <div style="display:flex;gap:8px;">
+        <button type="submit" class="btn">Send message</button>
+        <a class="btn secondary" href="{% url 'users:home' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:900px;margin:30px auto;padding:0 18px;">
+
+  <div class="card" style="padding:22px;display:flex;gap:22px;align-items:flex-start;">
+
+    <!-- Profile photo -->
+    {% if profile.photo %}
+      <img src="{{ profile.photo.url }}" alt="Profile photo"
+           style="width:140px;height:140px;border-radius:12px;object-fit:cover;">
+    {% else %}
+      <div style="width:140px;height:140px;border-radius:12px;background:#072029;
+                  display:flex;align-items:center;justify-content:center;
+                  color:#00aaff;font-size:2.4rem;font-weight:700;">
+        {{ profile.user.username|slice:":1" }}
+      </div>
+    {% endif %}
+
+    <!-- Profile details -->
+    <div>
+      <h2 style="margin:0 0 10px 0;color:#eaf3ff;">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+
+      <p style="color:var(--muted);margin:0 0 6px 0;">
+        <strong>Email:</strong> {{ profile.user.email }}
+      </p>
+      {% if profile.student_id %}
+      <p style="color:var(--muted);margin:0 0 6px 0;">
+        <strong>Student ID:</strong> {{ profile.student_id }}
+      </p>
+      {% endif %}
+
+      {% if profile.department %}
+      <p style="color:var(--muted);margin:0 0 6px 0;">
+        <strong>Department:</strong> {{ profile.get_department_display }}
+      </p>
+      {% endif %}
+
+      {% if profile.skills %}
+      <p style="color:var(--muted);margin:0;"><strong>Skills:</strong> {{ profile.skills }}</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Message button -->
+  <div style="margin-top:20px;text-align:right;">
+    <a class="btn" href="{% url 'users:send_message' profile.user.username %}">
+      Send Message
+    </a>
+  </div>
+
+</div>
+{% endblock %}

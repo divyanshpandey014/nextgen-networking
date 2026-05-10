@@ -1,0 +1,63 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}Send Message{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:900px;margin:32px auto;padding:0 18px;">
+
+  <!-- Header -->
+  <div class="card" style="padding:18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <h2 style="margin:0;color:#eaf3ff;">Send a Message</h2>
+      <p style="color:var(--muted);margin:6px 0 0 0;">
+        Messaging <strong style="color:var(--accent);">{{ receiver.get_full_name|default:receiver.username }}</strong>
+      </p>
+    </div>
+
+    <div style="display:flex;gap:10px;">
+      <a class="btn" href="{% url 'users:dashboard' %}">Dashboard</a>
+      <a class="btn" href="{% url 'users:inbox' %}">Inbox</a>
+      <a class="btn" href="{% url 'users:profile' receiver.username %}">View Profile</a>
+    </div>
+  </div>
+
+  <!-- Illustration -->
+  <div class="card" style="padding:12px;margin-bottom:18px;display:flex;gap:12px;align-items:center;">
+    <img src="/mnt/data/478dba8b-ae42-4804-95d1-2b611163be98.png" 
+         alt="ConnectGen screenshot" 
+         style="height:68px;border-radius:6px;object-fit:cover;">
+    <div style="color:var(--muted);font-size:.95rem;">
+      Keep your message respectful and relevant. Your communication is private between you and the recipient.
+    </div>
+  </div>
+
+  <!-- Message form -->
+  <form method="post" class="card" style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    {% csrf_token %}
+
+    <label style="color:var(--accent2);font-weight:600;">Message</label>
+    <textarea name="body"
+              rows="6"
+              class="search-input"
+              placeholder="Write something meaningful to {{ receiver.get_full_name|default:receiver.username }}..."
+              style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#04101a;color:#eaf3ff;resize:vertical;"></textarea>
+
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button type="submit" class="btn" style="padding:10px 16px;">Send</button>
+      <a href="{% url 'users:inbox' %}" class="btn" 
+         style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:10px 16px;">
+        Cancel
+      </a>
+    </div>
+  </form>
+
+  {% if messages %}
+    <ul class="messages" style="margin-top:16px;">
+      {% for msg in messages %}
+        <li style="color:#ffdede;">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</div>
+{% endblock %}

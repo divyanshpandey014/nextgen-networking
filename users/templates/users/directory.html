@@ -1,0 +1,98 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}Directory{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:1100px;margin:28px auto;padding:0 18px;">
+
+  <!-- Header -->
+  <div class="card" style="padding:18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div>
+      <h2 style="margin:0;color:#eaf3ff">Directory — Verified students</h2>
+      <p style="color:var(--muted);margin:6px 0 0 0">Search by name, student ID, email or department. Only admin-approved students appear here.</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a class="btn" href="{% url 'users:dashboard' %}">Dashboard</a>
+      <a class="btn" href="{% url 'users:inbox' %}">Inbox{% if unread_count %} ({{ unread_count }}){% endif %}</a>
+    </div>
+  </div>
+
+  <!-- Search & filter -->
+  <form method="get" class="card" style="padding:12px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search name, student ID, email..." class="search-input" style="min-width:320px;">
+    <select name="dept" class="search-input" style="width:240px;">
+      <option value="">All departments</option>
+      <option value="SoL">SoL — School of Languages</option>
+      <option value="SoM">SoM — School of Management</option>
+      <option value="SoSS">SoSS — School of Social Sciences</option>
+      <option value="SoENR">SoENR — School of Environment & Natural Resources</option>
+      <option value="SoD">SoD — School of Design</option>
+      <option value="SoPS">SoPS — School of Physical Sciences</option>
+      <option value="SoT">SoT — School of Technology</option>
+      <option value="SoMC">SoMC — School of Media & Communication Studies</option>
+      <option value="NHRC">NHRC — Nityanand Himalayan Research and Study Centre</option>
+      <option value="SoBS">SoBS — School of Biological Sciences</option>
+      <option value="GSCUS">GSCUS — Global South Centre for Urban Studies</option>
+      <option value="CHS">CHS — Centre for Hindu Studies</option>
+    </select>
+    <button type="submit" class="btn">Search</button>
+    <a href="{% url 'users:directory' %}" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)">Reset</a>
+  </form>
+
+  <!-- optional illustrative image (local screenshot) -->
+  <div class="card" style="padding:12px;margin-bottom:18px;display:flex;gap:12px;align-items:center;">
+    <img src="/mnt/data/478dba8b-ae42-4804-95d1-2b611163be98.png" alt="templates screenshot" style="height:68px;border-radius:6px;object-fit:cover;">
+    <div style="color:var(--muted);font-size:.95rem;">
+      Tip: Click any profile to view details and message the student.
+    </div>
+  </div>
+
+  <!-- Profiles grid -->
+  {% if users %}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;">
+      {% for profile in users %}
+        <article class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;align-items:center;">
+            {% if profile.photo %}
+              <img src="{{ profile.photo.url }}" alt="{{ profile.get_full_name }}" style="width:72px;height:72px;border-radius:8px;object-fit:cover;">
+            {% else %}
+              <div style="width:72px;height:72px;border-radius:8px;background:#071827;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700;">
+                {{ profile.get_full_name|default:profile.user.username|first }}
+              </div>
+            {% endif %}
+            <div style="flex:1;">
+              <a href="{% url 'users:profile' profile.user.username %}" style="color:var(--accent);font-weight:700;font-size:1rem;text-decoration:none;">
+                {{ profile.get_full_name|default:profile.user.username }}
+              </a>
+              <div style="color:var(--muted);font-size:.9rem;margin-top:6px;">
+                {% if profile.student_id %}ID: {{ profile.student_id }} • {% endif %}
+                {{ profile.get_department_display }}
+              </div>
+            </div>
+          </div>
+
+          <p style="color:#dcebf9;margin:0;font-size:.95rem;min-height:40px;">
+            {% if profile.skills %}
+              {{ profile.skills|truncatewords:16 }}
+            {% else %}
+              No skills added yet.
+            {% endif %}
+          </p>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:auto;">
+            <a class="btn" href="{% url 'users:profile' profile.user.username %}">View</a>
+            <a class="btn" href="{% url 'users:send_message' profile.user.username %}">Message</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card" style="padding:18px;color:var(--muted);">
+      No verified students found. Try widening your search or check back later.
+    </div>
+  {% endif %}
+
+  <!-- pagination hint: add pagination controls here if you paginate in the view -->
+
+</div>
+{% endblock %}

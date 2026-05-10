@@ -1,0 +1,114 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Dashboard{% endblock %}
+
+
+{% block content %}
+<div class="container" style="max-width:1100px;margin:28px auto;padding:0 18px;">
+
+  <!-- Top row: Welcome + quick actions -->
+  <div class="grid" style="display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;">
+
+    <!-- Profile card -->
+    <aside class="card profile-card" style="padding:18px;">
+      <div style="display:flex;gap:12px;align-items:center;">
+        {% if user.profile.photo %}
+          <img src="{{ user.profile.photo.url }}" alt="Profile photo" class="profile-photo" style="width:96px;height:96px;border-radius:10px;object-fit:cover;">
+        {% else %}
+          <div class="profile-photo placeholder" style="width:96px;height:96px;border-radius:10px;background:#072029;display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--accent2)">
+            {{ user.get_full_name|default:user.username|slice:":1" }}
+          </div>
+        {% endif %}
+        <div>
+          <div style="font-size:1.05rem;font-weight:700;color:var(--accent)">{{ user.get_full_name|default:user.username }}</div>
+          <div style="color:var(--muted);font-size:.95rem;margin-top:4px;">
+            {{ user.email }}
+          </div>
+          <div style="color:var(--muted);font-size:.95rem;margin-top:8px;">
+            {% if user.profile.student_id %}ID: {{ user.profile.student_id }}{% endif %}
+            {% if user.profile.department %}<br>{{ user.profile.get_department_display }}{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.4;">
+          {% if user.profile.skills %}
+            <strong>Skills:</strong> {{ user.profile.skills|truncatechars:120 }}
+          {% else %}
+            Add skills to help others find you.
+          {% endif %}
+        </p>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn" href="{% url 'users:profile' user.username %}">View profile</a>
+        <a class="btn" href="{% url 'users:send_message' user.username %}">Send message</a>
+      </div>
+    </aside>
+
+    <!-- Right column: Quick actions + recent messages -->
+    <main>
+      <div class="card" style="padding:18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 style="margin:0 0 6px 0;color:#eaf3ff;">Welcome to ConnectGen</h2>
+          <div style="color:var(--muted);">Private student network for <strong>DOON UNIVERSITY</strong>. Use the directory to discover verified students and message them securely.</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <a class="btn" href="{% url 'users:directory' %}">Directory</a>
+          <a class="btn" href="{% url 'users:inbox' %}">Inbox{% if unread_count %} ({{ unread_count }}){% endif %}</a>
+        </div>
+      </div>
+
+      <!-- Action tiles -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;">
+        <a href="{% url 'users:directory' %}" class="card quick-card" style="padding:14px;text-decoration:none;">
+          <div style="font-weight:700;font-size:1.05rem;color:var(--accent)">Directory</div>
+          <div style="color:var(--muted);margin-top:6px;font-size:.95rem;">Search by name, student ID, or department.</div>
+        </a>
+
+        <a href="{% url 'users:inbox' %}" class="card quick-card" style="padding:14px;text-decoration:none;">
+          <div style="font-weight:700;font-size:1.05rem;color:var(--accent)">Inbox</div>
+          <div style="color:var(--muted);margin-top:6px;font-size:.95rem;">Read and reply to messages from verified students.</div>
+        </a>
+
+        <a href="{% url 'users:profile' user.username %}" class="card quick-card" style="padding:14px;text-decoration:none;">
+          <div style="font-weight:700;font-size:1.05rem;color:var(--accent)">Edit Profile</div>
+          <div style="color:var(--muted);margin-top:6px;font-size:.95rem;">Update photo, skills, and department information.</div>
+        </a>
+      </div>
+
+      <!-- Recent messages -->
+      <section class="card" style="padding:18px;">
+        <h3 style="margin:0 0 12px 0;color:#eaf3ff">Recent messages</h3>
+
+        {% if recent_msgs %}
+          <ul style="list-style:none;padding:0;margin:0;">
+            {% for msg in recent_msgs %}
+              <li style="padding:12px;border-radius:8px;margin-bottom:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.0));display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="font-weight:700;color:var(--accent);">
+                    {% if msg.sender.get_full_name %}{{ msg.sender.get_full_name }}{% else %}{{ msg.sender.username }}{% endif %}
+                    <span style="font-weight:400;color:var(--muted);font-size:.9rem;margin-left:8px;">— {{ msg.created_at|naturaltime }}</span>
+                  </div>
+                  <div style="color:#dcebf9;margin-top:6px;">
+                    {{ msg.body|truncatechars:180 }}
+                  </div>
+                </div>
+                <div style="margin-left:14px;min-width:90px;text-align:right;">
+                  <a class="btn" href="{% url 'users:profile' msg.sender.username %}" style="display:inline-block;margin-bottom:6px;">View</a>
+                  <a class="btn" href="{% url 'users:send_message' msg.sender.username %}" style="display:inline-block;">Reply</a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p style="color:var(--muted);">No recent messages. Use the Directory to connect with fellow students.</p>
+        {% endif %}
+      </section>
+    </main>
+  </div>
+</div>
+{% endblock %}
+

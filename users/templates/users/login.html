@@ -1,0 +1,55 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:900px;margin:36px auto;padding:0 18px;">
+
+  <section class="card" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:22px;">
+    <!-- Left: form -->
+    <div style="flex:1;min-width:300px;">
+      <h2 style="margin:0 0 8px 0;color:#eaf3ff">Sign in to ConnectGen</h2>
+      <p style="color:var(--muted);margin:0 0 18px 0">Use your email or username and password. Accounts require admin approval before first login.</p>
+
+      <form method="post" style="display:flex;flex-direction:column;gap:12px;max-width:420px;">
+        {% csrf_token %}
+
+        <!-- Email or username (we accept both) -->
+        <label style="font-size:.9rem;color:var(--muted);">Email (or username)</label>
+        <input type="email" name="email" placeholder="you@doon.edu or username" class="search-input" autofocus>
+
+        <!-- Hidden username field offered as fallback if you want separate input -->
+        <input type="hidden" name="username" value="">
+
+        <label style="font-size:.9rem;color:var(--muted);">Password</label>
+        <input type="password" name="password" placeholder="Your password" class="search-input">
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:6px;">
+          <button type="submit" class="btn" style="padding:10px 16px;">Sign in</button>
+          <a href="{% url 'users:signup' %}" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)">Register</a>
+        </div>
+
+        <div style="color:var(--muted);font-size:.9rem;margin-top:8px;">
+          Forgot password? (implement password-reset flow separately)
+        </div>
+      </form>
+
+      {% if messages %}
+        <ul class="messages" style="margin-top:14px;">
+          {% for msg in messages %}
+            <li style="color:#ffdede">{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <!-- Right: illustration -->
+    <div style="flex:1;min-width:260px;text-align:center;">
+      <img src="/mnt/data/478dba8b-ae42-4804-95d1-2b611163be98.png"
+           alt="ConnectGen illustration"
+           style="width:100%;max-width:380px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+      <p style="color:var(--muted);font-size:.95rem;margin-top:10px;">Private — Verified students only • DOON UNIVERSITY</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

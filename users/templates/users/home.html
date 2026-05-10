@@ -1,0 +1,75 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:1100px;margin:32px auto;padding:0 18px;">
+
+  <!-- Hero banner -->
+  <section class="card" style="padding:28px;display:flex;gap:26px;align-items:center;flex-wrap:wrap;">
+
+    <div style="flex:1;min-width:280px;">
+      <h1 style="font-size:2rem;color:#eaf3ff;margin:0 0 10px 0;">
+        Welcome to <span style="color:var(--accent)">ConnectGen</span>
+      </h1>
+
+      <h3 style="color:var(--accent2);margin-top:0;">
+        Private Student Networking Platform  
+        <br>for <strong>DOON UNIVERSITY</strong>
+      </h3>
+
+      <p style="color:var(--muted);font-size:1rem;line-height:1.5;margin:14px 0 20px 0;">
+        Meet verified students, build connections, collaborate on projects,
+        and communicate securely inside your university network.
+      </p>
+
+      <!-- Buttons -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="btn" href="{% url 'users:signup' %}" 
+             style="font-size:1rem;padding:12px 18px;">
+              Register
+          </a>
+
+          <a class="btn" href="{% url 'users:login' %}"
+             style="background:transparent;border:1px solid var(--accent);
+                    font-size:1rem;padding:12px 18px;">
+              Sign In
+          </a>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div style="flex:1;min-width:260px;text-align:center;">
+      <img src="/mnt/data/478dba8b-ae42-4804-95d1-2b611163be98.png"
+           alt="ConnectGen screenshot"
+           style="width:100%;max-width:440px;border-radius:12px;
+                  box-shadow:0 0 24px rgba(0,0,0,0.45);">
+    </div>
+  </section>
+
+  <!-- Why ConnectGen section -->
+  <section class="card" style="padding:22px;margin-top:22px;">
+    <h2 style="margin:0 0 16px 0;color:#eaf3ff;">Why ConnectGen?</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;">
+
+      <div class="card" style="padding:16px;">
+        <h3 style="color:var(--accent);margin:0 0 8px 0;">Verified Students Only</h3>
+        <p style="color:var(--muted);font-size:.95rem;">Every account is manually approved by admin for authenticity.</p>
+      </div>
+
+      <div class="card" style="padding:16px;">
+        <h3 style="color:var(--accent);margin:0 0 8px 0;">Private Directory</h3>
+        <p style="color:var(--muted);font-size:.95rem;">Search by name, department, or student ID to find peers easily.</p>
+      </div>
+
+      <div class="card" style="padding:16px;">
+        <h3 style="color:var(--accent);margin:0 0 8px 0;">Secure Messaging</h3>
+        <p style="color:var(--muted);font-size:.95rem;">Communicate safely with fellow students inside a monitored environment.</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}

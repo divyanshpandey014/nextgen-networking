@@ -1,0 +1,135 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:1000px;margin:32px auto;padding:0 18px;">
+
+  <section class="card" style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;padding:22px;">
+
+    <!-- Left: signup form -->
+    <div style="flex:1;min-width:320px;max-width:640px;">
+      <h2 style="margin:0 0 6px 0;color:#eaf3ff;">Create your ConnectGen account</h2>
+      <p style="color:var(--muted);margin:0 0 18px 0;">Register using your university email. Your account will be reviewed and approved by admin before you can sign in.</p>
+
+      <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:12px;">
+        {% csrf_token %}
+        <!-- Render form fields individually for better control -->
+        <div>
+          <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Email</label>
+          {{ form.email }}
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:150px;">
+            <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">First name</label>
+            {{ form.first_name }}
+          </div>
+          <div style="flex:1;min-width:150px;">
+            <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Last name</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Student ID</label>
+          {{ form.student_id }}
+        </div>
+
+        <div>
+          <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Department</label>
+          {{ form.department }}
+        </div>
+
+        <div>
+          <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Skills (optional)</label>
+          {{ form.skills }}
+        </div>
+
+        <div>
+          <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Profile photo (optional)</label>
+          {{ form.photo }}
+          <div id="photo-preview" style="margin-top:8px;"></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="min-width:200px;">
+            <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Password</label>
+            {{ form.password1 }}
+          </div>
+          <div style="min-width:200px;">
+            <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px;">Confirm password</label>
+            {{ form.password2 }}
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:6px;">
+          <button type="submit" class="btn" style="padding:10px 16px;">Submit application</button>
+          <a href="{% url 'users:login' %}" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);">Sign in</a>
+        </div>
+
+        {% if form.errors %}
+          <div style="color:#ffdede;margin-top:8px;">
+            Please correct the highlighted fields.
+          </div>
+        {% endif %}
+      </form>
+
+      <p style="color:var(--muted);font-size:.9rem;margin-top:12px;">
+        After submission, admin will review and approve your account. You'll receive an email when your account is activated.
+      </p>
+    </div>
+
+    <!-- Right: illustration & quick notes -->
+    <aside style="width:320px;min-width:260px;">
+      <div style="background:#04101a;padding:12px;border-radius:10px;text-align:center;">
+        <img src="/mnt/data/478dba8b-ae42-4804-95d1-2b611163be98.png" alt="ConnectGen" style="width:100%;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,0.45);">
+      </div>
+
+      <div class="card" style="padding:12px;margin-top:12px;">
+        <h4 style="margin:0 0 8px 0;color:var(--accent);">Before you apply</h4>
+        <ul style="color:var(--muted);margin:0;padding-left:18px;line-height:1.5;">
+          <li>Use your official university email.</li>
+          <li>Student ID must be unique and verifiable.</li>
+          <li>Keep skills concise — these help others find you.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="padding:12px;margin-top:12px;color:var(--muted);font-size:.95rem;">
+        <strong>Help</strong>
+        <p style="margin:8px 0 0 0;">Questions? Use the <a href="{% url 'users:contact' %}" style="color:var(--accent)">Contact us</a> page.</p>
+      </div>
+    </aside>
+  </section>
+</div>
+
+<!-- Small JS for image preview (works in dev & modern browsers) -->
+<script>
+  (function(){
+    const input = document.querySelector('input[type="file"][name="photo"]');
+    const preview = document.getElementById('photo-preview');
+    if (!input || !preview) return;
+
+    input.addEventListener('change', (e) => {
+      preview.innerHTML = '';
+      const file = e.target.files[0];
+      if (!file) return;
+      const img = document.createElement('img');
+      img.style.width = '100px';
+      img.style.height = '100px';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '8px';
+      img.style.boxShadow = '0 6px 18px rgba(0,0,0,0.45)';
+      img.alt = 'Preview';
+      preview.appendChild(img);
+
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  })();
+</script>
+
+{% endblock %}
